@@ -1,5 +1,8 @@
+#![feature(iter_array_chunks)]
+
 mod day_01;
 mod day_02;
+mod day_03;
 mod timer;
 
 use std::env;
@@ -14,6 +17,7 @@ fn main() {
     match day {
         "1" => day_01::solve(),
         "2" => day_02::solve(),
+        "3" => day_03::solve(),
         _ => println!("No solver for day {0}", day),
     }
 }

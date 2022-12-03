@@ -27,10 +27,10 @@ enum Symbol<'a> {
 }
 
 fn run() -> () {
-    let input = include_str!("__input.txt");
+    let input: &str = include_str!("__input.txt");
     let moves: Vec<Vec<&str>> = input
         .lines()
-        .map(|line| line.split(&" ").collect())
+        .map(|line: &str| line.split(&" ").collect())
         .collect();
 
     println!(
@@ -55,13 +55,13 @@ fn calc_total_score<F: Fn(&Vec<&str>) -> i32, T>(
 fn calc_score_p1(round: &Vec<&str>) -> i32 {
     let shapes: Vec<Shape> = round
         .iter()
-        .map(|shape| match_shape(shape).unwrap())
+        .map(|shape: &&str| match_shape(shape).unwrap())
         .collect();
 
     let opponent: &Shape = &shapes[0];
     let player: &Shape = &shapes[1];
 
-    let outcome = calc_outcome(opponent, player);
+    let outcome: i32 = calc_outcome(opponent, player);
 
     outcome + (*player) as i32
 }
@@ -75,7 +75,7 @@ fn match_shape(shape: &str) -> Result<Shape, Error> {
         "Y" => Ok(Shape::Paper),
         "Z" => Ok(Shape::Scissor),
         _ => {
-            let msg = format!("Could not match shape {}", shape);
+            let msg: String = format!("Could not match shape {}", shape);
             Err(Error::new(ErrorKind::InvalidData, msg))
         }
     }
@@ -104,13 +104,13 @@ fn calc_outcome(opponent: &Shape, player: &Shape) -> i32 {
 fn calc_score_p2(round: &Vec<&str>) -> i32 {
     let symbols: Vec<Symbol> = round
         .iter()
-        .map(|shape| match_symbol(shape).unwrap())
+        .map(|shape: &&str| match_symbol(shape).unwrap())
         .collect();
 
     let opponent: &Shape = match &symbols[0] {
         Symbol::Shape(s) => Ok(s),
         Symbol::MatchResult(_) => {
-            let msg = format!("Could not match opponent shape {:?}", &symbols[0]);
+            let msg: String = format!("Could not match opponent shape {:?}", &symbols[0]);
             Err(Error::new(ErrorKind::InvalidData, msg))
         }
     }
@@ -118,7 +118,7 @@ fn calc_score_p2(round: &Vec<&str>) -> i32 {
     let outcome: &MatchResult = *match &symbols[1] {
         Symbol::MatchResult(mr) => Ok(mr),
         Symbol::Shape(_) => {
-            let msg = format!("Could not match shape {:?}", &symbols[1]);
+            let msg: String = format!("Could not match shape {:?}", &symbols[1]);
             Err(Error::new(ErrorKind::InvalidData, msg))
         }
     }
@@ -150,7 +150,7 @@ fn match_symbol(shape: &str) -> Result<Symbol, Error> {
         "Y" => Ok(Symbol::MatchResult(&MatchResult::Draw)),
         "Z" => Ok(Symbol::MatchResult(&MatchResult::Win)),
         _ => {
-            let msg = format!("Could not match shape {}", shape);
+            let msg: String = format!("Could not match shape {}", shape);
             Err(Error::new(ErrorKind::InvalidData, msg))
         }
     }
