@@ -3,6 +3,7 @@ use std::io::{Error, ErrorKind};
 use crate::timer;
 
 pub fn solve() -> () {
+    println!("Solving day 2:");
     timer::timeit(|| run())
 }
 

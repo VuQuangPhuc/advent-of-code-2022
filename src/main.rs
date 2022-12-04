@@ -3,6 +3,7 @@
 mod day_01;
 mod day_02;
 mod day_03;
+mod day_04;
 mod timer;
 
 use std::env;
@@ -18,6 +19,7 @@ fn main() {
         "1" => day_01::solve(),
         "2" => day_02::solve(),
         "3" => day_03::solve(),
+        "4" => day_04::solve(),
         _ => println!("No solver for day {0}", day),
     }
 }

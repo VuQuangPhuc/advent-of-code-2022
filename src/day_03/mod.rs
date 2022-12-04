@@ -3,6 +3,7 @@ use std::collections::BTreeSet;
 use crate::timer;
 
 pub fn solve() -> () {
+    println!("Solving day 3:");
     timer::timeit(|| run())
 }
 
