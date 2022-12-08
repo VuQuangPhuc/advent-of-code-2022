@@ -1,7 +1,6 @@
 use crate::timer;
 
 pub fn solve() -> () {
-    println!("Solving day 4:");
     timer::timeit(|| run());
 }
 

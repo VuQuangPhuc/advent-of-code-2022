@@ -5,6 +5,7 @@ mod day_02;
 mod day_03;
 mod day_04;
 mod day_05;
+mod day_06;
 mod timer;
 
 use std::env;
@@ -16,12 +17,15 @@ fn main() {
 
     let day: &str = arg.as_str();
 
+    println!("Solving day {}:", day);
+
     match day {
         "1" => day_01::solve(),
         "2" => day_02::solve(),
         "3" => day_03::solve(),
         "4" => day_04::solve(),
         "5" => day_05::solve(),
+        "6" => day_06::solve(),
         _ => println!("No solver for day {0}", day),
     }
 }

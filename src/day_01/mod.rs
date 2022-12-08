@@ -3,7 +3,6 @@ use std::collections::BinaryHeap;
 use crate::timer;
 
 pub fn solve() -> () {
-    println!("Solving day 1:");
     timer::timeit(|| run());
 }
 
