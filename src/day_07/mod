@@ -1,0 +1,132 @@
+use crate::timer;
+
+pub fn solve() -> () {
+    timer::timeit(|| run());
+}
+
+#[derive(Debug)]
+struct FileSystem {
+    directories: Vec<Directory>,
+}
+
+impl FileSystem {
+    pub fn new() -> FileSystem {
+        FileSystem {
+            directories: Vec::new(),
+        }
+    }
+
+    pub fn add_directory(&mut self, parent: usize) -> usize {
+        let idx = self.directories.len();
+        let mut dir = Directory::new();
+        if idx != 0 {
+            dir.parent = Some(parent);
+            self.directories[parent].directories.push(idx);
+        }
+        self.directories.push(dir);
+        idx
+    }
+
+    pub fn get_parent_directory_idx(&self, idx: usize) -> usize {
+        self.directories[idx].parent.unwrap()
+    }
+
+    pub fn add_file(&mut self, directory_idx: usize, file: File) -> () {
+        self.directories[directory_idx].files.push(file);
+    }
+
+    pub fn calc_dir_size(&self, dir_idx: usize) -> u32 {
+        let mut size: u32 = 0;
+        let dir: &Directory = &self.directories[dir_idx];
+        size += dir.file_size_sum();
+
+        for child in &dir.directories {
+            size += self.calc_dir_size(*child);
+        }
+
+        size
+    }
+
+    pub fn calc_dir_sizes(&self) -> Vec<u32> {
+        let mut sizes: Vec<u32> = Vec::new();
+        for idx in 0..self.directories.len() {
+            sizes.push(self.calc_dir_size(idx));
+        }
+        sizes
+    }
+}
+
+#[derive(Debug)]
+struct File {
+    size: u32,
+}
+
+impl File {
+    pub fn new(size: u32) -> File {
+        File { size }
+    }
+}
+
+#[derive(Debug)]
+struct Directory {
+    parent: Option<usize>,
+    directories: Vec<usize>,
+    files: Vec<File>,
+}
+
+impl Directory {
+    pub fn new() -> Directory {
+        Directory {
+            parent: None,
+            directories: Vec::new(),
+            files: Vec::new(),
+        }
+    }
+
+    pub fn file_size_sum(&self) -> u32 {
+        self.files.iter().map(|file| file.size).sum()
+    }
+}
+
+fn run() -> () {
+    let input: &str = include_str!("__input.txt");
+    let mut file_system: FileSystem = FileSystem::new();
+    let mut current_directory: usize = 0;
+
+    for line in input.lines() {
+        let output: Vec<&str> = line.split_whitespace().collect();
+
+        if &output[1] == &"cd" {
+            if &output[2] == &".." {
+                current_directory = file_system.get_parent_directory_idx(current_directory);
+            } else {
+                current_directory = file_system.add_directory(current_directory);
+            }
+        } else {
+            match &output[0].parse::<u32>() {
+                Ok(file_size) => file_system.add_file(current_directory, File::new(*file_size)),
+                Err(_) => (),
+            }
+        }
+    }
+
+    let sizes: Vec<u32> = file_system.calc_dir_sizes();
+
+    println!(
+        "Part 1: {:?}",
+        sizes.iter().filter(|size| *size < &100_000).sum::<u32>()
+    );
+
+    let unused_space: u32 = 70_000_000 - sizes[0];
+    let to_free: u32 = 30_000_000 - unused_space;
+
+    let mut del_space: u32 = 70_000_000;
+
+    for size in sizes {
+        if size < del_space && size > to_free {
+            del_space = size;
+        }
+    }
+
+    println!("Part 2: {}", del_space);
+}
