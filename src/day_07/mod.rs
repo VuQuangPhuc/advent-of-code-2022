@@ -66,18 +66,22 @@ fn run() -> () {
 
     println!(
         "Part 1: {}",
-        sizes.iter().filter(|size| *size < &100_000).sum::<u32>()
+        sizes
+            .iter()
+            .fold(0, |acc, size| acc + if size < &100_000 { size } else { &0 })
     );
 
     let available_space: u32 = FS_SIZE - fs[ROOT_IDX].size;
     let needed_space: u32 = UPDATE_SIZE - available_space;
-    let mut min_del_size: u32 = FS_SIZE;
 
-    for size in sizes {
-        if size < min_del_size && size > needed_space {
-            min_del_size = size;
-        }
-    }
-
-    println!("Part 2: {}", min_del_size);
+    println!(
+        "Part 2: {}",
+        sizes.iter().fold(FS_SIZE, |acc, size| {
+            if size < &acc && size > &needed_space {
+                *size
+            } else {
+                acc
+            }
+        })
+    );
 }
