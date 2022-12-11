@@ -17,7 +17,7 @@ fn run() -> () {
 }
 
 fn simulate<const ROPE_LEN: usize>(input: &str) -> usize {
-    let mut rope = [[0, 0]; ROPE_LEN];
+    let mut rope = [(0, 0); ROPE_LEN];
     let mut history: HashSet<(i32, i32)> = HashSet::new();
     history.insert((0, 0));
 
@@ -26,24 +26,24 @@ fn simulate<const ROPE_LEN: usize>(input: &str) -> usize {
 
         for _ in 0..steps.parse::<u32>().unwrap() {
             match direction {
-                "U" => rope[0][1] += 1,
-                "D" => rope[0][1] -= 1,
-                "R" => rope[0][0] += 1,
-                "L" => rope[0][0] -= 1,
+                "U" => rope[0].1 += 1,
+                "D" => rope[0].1 -= 1,
+                "R" => rope[0].0 += 1,
+                "L" => rope[0].0 -= 1,
                 _ => (),
             }
 
             for idx in 1..ROPE_LEN {
-                let x_diff: i32 = rope[idx - 1][0] - rope[idx][0];
-                let y_diff: i32 = rope[idx - 1][1] - rope[idx][1];
+                let x_diff: i32 = rope[idx - 1].0 - rope[idx].0;
+                let y_diff: i32 = rope[idx - 1].1 - rope[idx].1;
 
                 if x_diff.abs() > 1 || y_diff.abs() > 1 {
-                    rope[idx][0] += x_diff.signum();
-                    rope[idx][1] += y_diff.signum();
+                    rope[idx].0 += x_diff.signum();
+                    rope[idx].1 += y_diff.signum();
                 }
             }
 
-            history.insert((rope[ROPE_LEN - 1][0], rope[ROPE_LEN - 1][1]));
+            history.insert(rope[ROPE_LEN - 1]);
         }
     }
 
