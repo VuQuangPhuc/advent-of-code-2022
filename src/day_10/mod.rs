@@ -46,13 +46,13 @@ fn render_display(register_states: &Vec<i32>) -> () {
     const DISPLAY_WIDTH: usize = 40;
     const DISPLEY_HEIGHT: usize = 6;
 
-    let mut display: [char; 240] = ['.'; DISPLAY_WIDTH * DISPLEY_HEIGHT];
+    let mut display: [char; 240] = ['•'; DISPLAY_WIDTH * DISPLEY_HEIGHT];
 
     for idx in 0..DISPLAY_WIDTH * DISPLEY_HEIGHT {
         let p: i32 = register_states[idx];
         let q: i32 = (idx % DISPLAY_WIDTH) as i32;
         if q >= p - 1 && q <= p + 1 {
-            display[idx] = '#';
+            display[idx] = '◘';
         }
     }
 
